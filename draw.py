@@ -58,22 +58,26 @@ for line in textwrap.wrap(body, width=64):
     y += 26
 d.rectangle([48, 388, 218, 414], fill=RED)
 d.text((78, 393), "TOP STORY", font=F_SANS_B(20), fill=WHITE)
-# Globe icon
-cx, cy, r = 856, 288, 88
-d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=LIGHT, outline=(14, 116, 144), width=4)
-d.ellipse([cx - 62, cy - 48, cx - 8, cy + 6], fill=(34, 139, 92))
-d.ellipse([cx + 18, cy - 58, cx + 66, cy - 10], fill=(34, 139, 92))
-d.ellipse([cx - 28, cy + 22, cx + 26, cy + 76], fill=(34, 139, 92))
-d.line([(cx - 78, cy + 8), (cx - 38, cy + 32), (cx - 6, cy - 2),
-        (cx + 34, cy + 28), (cx + 78, cy + 2)], fill=RED, width=5)
-# Sun
-sx, sy = 936, 196
-d.ellipse([sx - 18, sy - 18, sx + 18, sy + 18], fill=(245, 158, 11))
-for a in range(0, 360, 45):
-    import math
-    x1 = sx + 26 * math.cos(math.radians(a)); y1 = sy + 26 * math.sin(math.radians(a))
-    x2 = sx + 36 * math.cos(math.radians(a)); y2 = sy + 36 * math.sin(math.radians(a))
-    d.line([(x1, y1), (x2, y2)], fill=(245, 158, 11), width=4)
+# COP31 scene: Antalya coast, conference hall, fossil-fuel chimney crossed out
+import math
+sx0, sy0, sx1, sy1 = 736, 168, 976, 384
+d.rectangle([sx0, sy0, sx1, sy1], fill=(186, 226, 243))          # sky
+d.ellipse([934, 178, 964, 208], fill=(245, 158, 11))            # sun
+# large conference hall: dome, columns, flags
+d.rectangle([752, 300, 960, 384], fill=WHITE, outline=NAVY, width=3)
+d.rectangle([752, 300, 960, 312], fill=NAVY)
+d.ellipse([816, 224, 892, 302], fill=(180, 200, 220), outline=NAVY, width=3)
+d.line([(854, 224), (854, 204)], fill=NAVY, width=3)
+d.polygon([(854, 204), (874, 210), (854, 216)], fill=RED)
+for col in (776, 812, 896, 932):
+    d.rectangle([col, 322, col + 10, 384], fill=(200, 210, 225), outline=NAVY, width=1)
+for fx, fc in [(768, (0, 90, 160)), (938, (0, 130, 80))]:
+    d.line([(fx, 300), (fx, 278)], fill=NAVY, width=2)
+    d.polygon([(fx, 278), (fx + 14, 283), (fx, 288)], fill=fc)
+# small crossed-out chimney at the hall's right (fossil fuel dispute)
+d.rectangle([962, 340, 972, 384], fill=(120, 120, 120))
+d.line([(958, 336), (976, 356)], fill=RED, width=4)
+d.line([(976, 336), (958, 356)], fill=RED, width=4)
 d.text((788, 396), "ANTALYA, TURKEY", font=F_SANS_B(17), fill=GREY)
 
 # Story strips
@@ -97,27 +101,49 @@ for i, (cat, head, body, icon) in enumerate(stories):
     d.rounded_rectangle([44, y + 8, 106, y + sh - 8], radius=8, fill=NAVY)
     ix, iy = 75, y + sh // 2
     if icon == "star":
-        pts = [(ix, iy - 22), (ix + 7, iy - 7), (ix + 23, iy - 7), (ix + 11, iy + 4),
-               (ix + 16, iy + 20), (ix, iy + 10), (ix - 16, iy + 20), (ix - 11, iy + 4),
-               (ix - 23, iy - 7), (ix - 7, iy - 7)]
+        # Kyiv skyline at night, explosion burst over a building
+        d.rectangle([ix - 22, iy - 6, ix - 8, iy + 20], fill=(180, 200, 230))
+        d.rectangle([ix - 4, iy - 14, ix + 10, iy + 20], fill=(200, 215, 240))
+        d.rectangle([ix + 14, iy - 2, ix + 22, iy + 20], fill=(180, 200, 230))
+        pts = [(ix + 3, iy - 26), (ix + 8, iy - 16), (ix + 18, iy - 16), (ix + 10, iy - 10),
+               (ix + 13, iy - 1), (ix + 3, iy - 6), (ix - 7, iy - 1), (ix - 4, iy - 10),
+               (ix - 12, iy - 16), (ix - 2, iy - 16)]
         d.polygon(pts, fill=(245, 158, 11))
+        d.ellipse([ix - 14, iy - 26, ix - 4, iy - 16], fill=(120, 120, 120))
     elif icon == "chart":
-        d.line([(ix - 20, iy + 12), (ix - 8, iy + 2), (ix + 2, iy + 8), (ix + 20, iy - 14)],
+        # falling market: red candlesticks and a down arrow
+        for cx, ch, cw in [(ix - 16, 14, 5), (ix - 5, 20, 5), (ix + 6, 26, 5), (ix + 17, 32, 5)]:
+            d.rectangle([cx - 2, iy - 4, cx + 2, iy - 4 + ch], fill=(239, 68, 68))
+        d.line([(ix - 22, iy - 18), (ix - 8, iy - 6), (ix + 4, iy + 2), (ix + 20, iy + 14)],
                fill=WHITE, width=4)
-        d.polygon([(ix + 20, iy - 14), (ix + 12, iy - 14), (ix + 20, iy - 6)], fill=WHITE)
+        d.polygon([(ix + 20, iy + 14), (ix + 20, iy + 4), (ix + 12, iy + 14)], fill=WHITE)
     elif icon == "capitol":
-        d.rectangle([ix - 18, iy - 4, ix + 18, iy + 14], fill=WHITE)
-        d.polygon([(ix - 12, iy - 4), (ix + 12, iy - 4), (ix, iy - 18)], fill=WHITE)
-        d.rectangle([ix - 2, iy - 12, ix + 2, iy - 4], fill=WHITE)
+        # US Capitol dome with columns and a flag
+        d.rectangle([ix - 18, iy + 2, ix + 18, iy + 16], fill=WHITE)
+        for col in (-12, -4, 4, 12):
+            d.rectangle([ix + col - 1, iy + 4, ix + col + 1, iy + 14], fill=NAVY)
+        d.ellipse([ix - 9, iy - 14, ix + 9, iy + 2], fill=WHITE)
+        d.line([(ix, iy - 14), (ix, iy - 24)], fill=WHITE, width=2)
+        d.polygon([(ix, iy - 24), (ix + 9, iy - 21), (ix, iy - 18)], fill=(239, 68, 68))
     elif icon == "ship":
-        d.polygon([(ix - 20, iy - 12), (ix + 20, iy - 12), (ix + 12, iy + 8),
-                   (ix - 12, iy + 8)], fill=WHITE)
-        d.rectangle([ix - 2, iy - 22, ix + 2, iy - 12], fill=WHITE)
-        d.line([(ix - 22, iy + 14), (ix + 22, iy + 14)], fill=(56, 189, 248), width=4)
+        # warship at sea, drone above, hit burst on deck
+        d.line([(ix - 22, iy + 16), (ix + 22, iy + 16)], fill=(56, 189, 248), width=4)
+        d.line([(ix - 20, iy + 20), (ix + 20, iy + 20)], fill=(56, 189, 248), width=3)
+        d.polygon([(ix - 20, iy - 4), (ix + 20, iy - 4), (ix + 12, iy + 12),
+                   (ix - 12, iy + 12)], fill=WHITE)
+        d.rectangle([ix - 2, iy - 14, ix + 2, iy - 4], fill=WHITE)
+        d.ellipse([ix - 4, iy - 24, ix + 4, iy - 18], fill=(200, 200, 200))
+        d.line([(ix - 8, iy - 21), (ix + 8, iy - 21)], fill=(200, 200, 200), width=2)
+        pts = [(ix + 8, iy - 12), (ix + 11, iy - 6), (ix + 17, iy - 6), (ix + 12, iy - 2),
+               (ix + 14, iy + 3), (ix + 8, iy + 0), (ix + 2, iy + 3), (ix + 4, iy - 2),
+               (ix - 1, iy - 6), (ix + 5, iy - 6)]
+        d.polygon(pts, fill=(245, 158, 11))
     else:
-        d.ellipse([ix - 18, iy - 18, ix + 18, iy + 18], fill=(245, 158, 11))
-        d.ellipse([ix - 12, iy - 12, ix + 12, iy + 12], outline=WHITE, width=3)
-        d.text((ix - 5, iy - 8), "*", font=F_SANS_B(20), fill=NAVY)
+        # handcuffs over a police star
+        d.ellipse([ix - 18, iy - 12, ix - 2, iy + 4], outline=WHITE, width=3)
+        d.ellipse([ix + 2, iy + 2, ix + 18, iy + 18], outline=WHITE, width=3)
+        d.line([(ix - 2, iy - 4), (ix + 2, iy + 10)], fill=WHITE, width=3)
+        d.ellipse([ix - 6, iy - 22, ix + 6, iy - 10], fill=(245, 158, 11))
     d.text((122, y + 8), cat, font=F_SANS_B(17), fill=RED)
     d.text((122, y + 28), head, font=F_SANS_B(27), fill=INK)
     d.text((122, y + 56), body, font=F_SANS(19), fill=GREY)
